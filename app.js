@@ -1,9 +1,14 @@
+const express = require('express');
 const { MongoClient } = require('mongodb');
 
+const app = express();
+const port = 3000;
+
+// Replace the following with your MongoDB connection string
 const uri = 'mongodb://localhost:27017'; // Update this if using a different host or port
 const dbName = 'helloworld';
 
-async function main() {
+app.get('/', async (req, res) => {
     const client = new MongoClient(uri);
 
     try {
@@ -15,17 +20,19 @@ async function main() {
         const messages = database.collection('messages');
 
         // Query the collection
-        const query = {};
-        const message = await messages.findOne(query);
+        const message = await messages.findOne({});
 
-        // Print the message
-        console.log(message.message);
+        // Send the message as a response
+        res.send(message ? message.message : 'No message found');
     } catch (err) {
         console.error(err);
+        res.status(500).send('Error retrieving message');
     } finally {
         // Close the connection
         await client.close();
     }
-}
+});
 
-main().catch(console.error);
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
