@@ -18,5 +18,5 @@ spec:
       - name: hw-nodejs
         image: 050752621859.dkr.ecr.us-west-2.amazonaws.com/hw-nodejs:latest
         ports:
-        - containerPort: 3080        
+        - containerPort: 3000        
       restartPolicy: Always
