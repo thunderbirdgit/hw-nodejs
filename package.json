@@ -1,3 +1,13 @@
-"dependencies": {
-  "mongodb": "^4.13.0"
+{
+  "name": "hw-nodejs",
+  "version": "1.0.0",
+  "description": "Simple Node.js app to fetch 'Hello World' from a MongoDB database",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "mongodb": "^4.13.0"
+  }
 }
+
