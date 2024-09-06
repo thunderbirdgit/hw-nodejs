@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hw-nodejs
+  labels:
+    name: hw-nodejs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hw-nodejs
+  template:
+    metadata:
+      labels:
+        app: hw-nodejs
+    spec:
+      containers:
+      - name: hw-nodejs
+        image: 050752621859.dkr.ecr.us-west-2.amazonaws.com/hw-nodejs:latest
+        ports:
+        - containerPort: 3080        
+      restartPolicy: Always
