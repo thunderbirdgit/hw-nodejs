@@ -1,0 +1,34 @@
+name: Perform Precommit Steps
+
+on:
+  push:
+    branches: 
+      - '**'
+  pull_request:
+    branches: [ "main" ]
+  repository_dispatch:
+    types: [ci-unittest]
+
+jobs:
+  # Determine the branch name to append to docker image
+  determine-branch:
+    uses: thunderbirdgit/gh-actions-wf/.github/workflows/get-branch-name.yml@develop
+  
+  # Get the short SHA to append to docker image
+  get-short-sha:
+    uses: thunderbirdgit/gh-actions-wf/.github/workflows/get-short-sha.yml@develop
+        
+  build:
+    strategy:
+      matrix:
+        # Build multiple images for each change
+        service_name: ["hw-nodejs"]
+    needs: [get-short-sha, determine-branch]
+    
+    # Use reusuable workflow and build multiple nodejs services, tag and publish to ecr
+    uses: thunderbirdgit/gh-actions-wf/.github/workflows/nodejs-build-ecr.yml@develop
+    secrets: inherit
+    with:
+      service_name: ${{matrix.service_name}}      
+      short_sha: ${{ needs.get-short-sha.outputs.short_sha }}
+      branch_name: ${{ needs.determine-branch.outputs.branch_name }}       
