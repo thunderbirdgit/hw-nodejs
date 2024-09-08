@@ -32,15 +32,16 @@ git clone https://github.com/thunderbirdgit/hw-nodejs.git
 
 3. Once the PR checks are green, the user will be allowed to merge the pull request. Merging will be blocked unless the checks are green.
 4. Once the changes are merged, the GitOps workflow will clone, build, tag, and publish the Docker image to the ECR repository.
-5. 
-    <img width="535" alt="image" src="https://github.com/user-attachments/assets/d609c673-8304-4f7e-b5d5-eb04cf8d2bc8">
 
-6. You can verify that the Docker image is pushed to the ECR repository.
+   <img width="535" alt="image" src="https://github.com/user-attachments/assets/d609c673-8304-4f7e-b5d5-eb04cf8d2bc8">
+  
+7. You can verify that the Docker image is pushed to the ECR repository.
 
    <img width="1091" alt="image" src="https://github.com/user-attachments/assets/114fefd8-05e3-4660-9c98-ed38d15aa7df">
 
-### 3. EKS Deployment
+### 3. Kubernetes Manifests:
 1. The manifests/ folder in the repository contains the following deployment files to deploy the Node.js application, create Kubernetes services and Ingress layers, and create MongoDB instances.
+
 2. Node.js Application Setup:
   - deployment.yml: Creates the hw-nodejs DeploymentSet with the number of replicas, pulls the image from the Docker container, and exposes port 3000 for service access.
   - service.yml: Creates a Kubernetes service layer to access the application on port 3000.
@@ -64,29 +65,29 @@ git clone https://github.com/thunderbirdgit/hw-nodejs.git
    <img width="728" alt="image" src="https://github.com/user-attachments/assets/608ab1c8-f584-4719-8bbd-4e1fe158b374">
 
 ### 5. Deploy NGINX controller:
-    Deploy the NGINX Kubernetes controller:
-
-    ```
-    $ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-    $ helm upgrade -i ingress-nginx ingress-nginx/ingress-nginx --version 4.2.3 --namespace kube-system --set controller.service.type=ClusterIP
+Deploy the NGINX Kubernetes controller:
     
-    $ kubectl -n kube-system rollout status deployment ingress-nginx-controller
-    deployment "ingress-nginx-controller" successfully rolled out
+ ```
+ $ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+ $ helm upgrade -i ingress-nginx ingress-nginx/ingress-nginx --version 4.2.3 --namespace kube-system --set controller.service.type=ClusterIP
+ 
+ $ kubectl -n kube-system rollout status deployment ingress-nginx-controller
+ deployment "ingress-nginx-controller" successfully rolled out
 
-    $ kubectl get deployment -n kube-system ingress-nginx-controller
-    NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-    ingress-nginx-controller   1/1     1            1           44h
+ $ kubectl get deployment -n kube-system ingress-nginx-controller
+ NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+ ingress-nginx-controller   1/1     1            1           44h
 
-    $ kubectl get pods -n kube-system | grep nginx
-    ingress-nginx-controller-7f49ccf564-mnfmk   1/1     Running   0          44h
-    ```
+ $ kubectl get pods -n kube-system | grep nginx
+ ingress-nginx-controller-7f49ccf564-mnfmk   1/1     Running   0          44h
+ ```
 
 ### 6. Apply Kubernetes changes
-    Apply the Kubernetes changes:
-    ```
-    cd hw-nodejs/manifests
-    kubectl apply -f .
-    ```
+Apply the Kubernetes changes:
+ ```
+ cd hw-nodejs/manifests
+ kubectl apply -f .
+ ```
 
 ### 7. Access the Application
 In a real-world scenario, dev.helloworld.com will be registered through domain registration providers. For the purposes of this exercise, modify the /etc/hosts file on your laptop or other device to access http://dev.helloworld.com through the Ingress IP.
