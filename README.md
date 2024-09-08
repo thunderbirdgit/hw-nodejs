@@ -11,6 +11,7 @@ The Hello World UI service project is designed to deploy a Node.js web applicati
 - **Create MongoDB Instance in EKS**: Set up a MongoDB replica set in the EKS Cluster.
 - **Access Data from MongoDB**: Retrieve data from MongoDB and display it in the Node.js application.
 - **Access Node.js Application from Load Balancer**: Access the Node.js application through the Load Balancer endpoint.
+- **GitOps Workflow for Node.js application**: Setup GitOps workflow to build, tag and publish container images to ECR repository for node.js application
 
 ## Architecture Diagram
 
@@ -25,7 +26,7 @@ Clone the repository to your local machine:
 git clone https://github.com/thunderbirdgit/hw-nodejs.git
 ```
    
-### 2. CI/CD Workflow
+### 2. GitOps Workflow
 1. Create a feature branch and make the required changes to the application repository.
    
 2. Store AWS Credentials such as Access key, Region, Account ID and Secret keys in secrets and variables in Github repository settings
