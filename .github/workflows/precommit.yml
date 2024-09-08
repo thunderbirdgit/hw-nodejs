@@ -24,6 +24,7 @@ jobs:
         # Build multiple images for each change
         service_name: ["hw-nodejs"]
     needs: [get-short-sha, determine-branch]
+    
     # Use reusuable workflow and build multiple nodejs services, tag and publish to ecr
     uses: thunderbirdgit/gh-actions-wf/.github/workflows/nodejs-build-ecr.yml@develop
     with:
