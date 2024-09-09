@@ -19,6 +19,10 @@ spec:
       labels:
         app: mongodb
     spec:
+      initContainers:
+      - name: mongo-init
+        image: mongo:4.4
+        command: ['sh', '-c', 'mongo --eval "db = db.getSiblingDB(\'helloworld\'); db.messages.insertOne({ message: \'Hello World !!\' });"']        
       containers:
       - name: mongodb
         image: mongo:4.4
