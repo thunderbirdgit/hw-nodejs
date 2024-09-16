@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo
+  name: mongodb
   namespace: dev-mongodb
 spec:
   clusterIP: None
   selector:
-    app: mongo
+    app: mongodb
   ports:
   - port: 27017

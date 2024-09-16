@@ -1,11 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hw-nodejs
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    name: hw-nodejs
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+      alb.ingress.kubernetes.io/backend-protocol: HTTP
+      alb.ingress.kubernetes.io/healthcheck-path: /
+      alb.ingress.kubernetes.io/healthcheck-port: "3000"
 spec:
-  ingressClassName: nginx
+  ingressClassName: alb  # Use the ALB ingress class
   rules:
     - host: dev.helloworld.com
       http:
@@ -17,4 +22,3 @@ spec:
                 name: hw-nodejs
                 port:
                   number: 3000
-                  

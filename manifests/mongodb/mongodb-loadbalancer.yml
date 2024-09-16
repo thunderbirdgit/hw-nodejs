@@ -5,6 +5,8 @@ metadata:
   namespace: dev-mongodb
 spec:
   type: LoadBalancer
+  internalTrafficPolicy: Cluster
+  externalTrafficPolicy: Cluster
   ports:
     - port: 27017
       targetPort: 27017

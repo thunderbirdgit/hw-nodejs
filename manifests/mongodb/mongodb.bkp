@@ -22,19 +22,24 @@ spec:
       containers:
       - name: mongodb
         image: mongo:4.4
-        command: ["mongod"]
-        args:
-          [
-           "--replSet", "rs0",
-           "--bind_ip_all",
-           "--port", "27017",
-           "--dbpath", "/data/db"
-          ]
+        command:
+          - mongod
+          - "--replSet"
+          - rs0
+          - "--bind_ip_all"
         ports:
         - containerPort: 27017
         volumeMounts:
         - name: data
           mountPath: /data/db
+        readinessProbe:
+          exec:
+            command:
+            - mongo
+            - --eval
+            - "db.adminCommand('ping')"
+          initialDelaySeconds: 5
+          periodSeconds: 10
         ports:
         - containerPort: 27017
   volumeClaimTemplates:

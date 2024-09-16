@@ -1,21 +1,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: alb-nginx-ingress
+  name: nodejs-ingress
   annotations:
-    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    alb.ingress.kubernetes.io/group.name: "nodejs-app-group"
 spec:
+  ingressClassName: alb  
   rules:
-    - host: dev.helloworld.com
+    - host: dev2.helloworld.com
       http:
         paths:
-          - path: /*
-            pathType: ImplementationSpecific
+          - path: /
+            pathType: Prefix
             backend:
               service:
-                name: nginx-ingress-controller
-                namespace: kube-system
+                name: hw-nodejs
                 port:
                   number: 80

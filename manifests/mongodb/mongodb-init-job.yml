@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-init-job
+  namespace: dev-mongodb
+spec:
+  template:
+    spec:
+      containers:
+      - name: mongodb-init
+        image: mongo:4.4
+        command: ["sh", "-c"]
+        args:
+          - |
+            # Get all MongoDB pods in the dev-mongodb namespace
+            mongodb_pods="mongodb-0 mongodb-1 mongodb-2"
+            
+            # Loop through each MongoDB pod
+            for pod in $mongodb_pods; do
+              # Get the pod's IP address
+              #mongodb_host=$(kubectl get pod "$pod" -n dev-mongodb -o jsonpath='{.status.podIP}')
+              mongodb_host="$pod"
+              # Check if the host was retrieved successfully
+              if [ -z "$mongodb_host" ]; then
+                echo "Failed to retrieve MongoDB host for pod $pod."
+                continue
+               fi
+               echo "Waiting for MongoDB to start on host $mongodb_host..."
+               # Wait for MongoDB to be ready
+               until mongo --host "$mongodb_host" --eval "print(\"MongoDB is ready\")" 2>/dev/null; do
+                sleep 5
+               done
+               echo "Running script on host $mongodb_host..."
+               # Run your MongoDB commands
+               mongo --host "$mongodb_host" --eval "db = db.getSiblingDB('helloworld'); db.messages.insertOne({ message: 'Hello World !!' });"
+            done
+      restartPolicy: OnFailure
