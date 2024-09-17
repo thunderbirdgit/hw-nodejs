@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 // Replace the following with your MongoDB connection string
-const uri = 'mongodb://mongodb-0.mongodb.dev-mongodb.svc.cluster.local:27017,mongodb-1.mongodb.dev-mongodb.svc.cluster.local:27017,mongodb-2.mongodb.dev-mongodb.svc.cluster.local:27017'; // Update this if using a different host or port
+const uri = 'mongodb://mongodb-0.mongodb.qa-mongodb.svc.cluster.local:27017,mongodb-1.mongodb.qa-mongodb.svc.cluster.local:27017,mongodb-2.mongodb.qa-mongodb.svc.cluster.local:27017'; // Update this if using a different host or port
 const dbName = 'helloworld';
 
 app.get('/', async (req, res) => {
