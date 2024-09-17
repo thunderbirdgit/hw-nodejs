@@ -21,27 +21,26 @@ const getMongoClient = () => {
 };
 
 app.get('/', async (req, res) => {
-    const client = getMongoClient();  // Get client from the round-robin host
-    const mongoHost = client.options.srvHost || client.s.url;  // Get the MongoDB host
+    const client = new MongoClient(uri);
 
     try {
-        // Connect to MongoDB
+        // Connect to the MongoDB cluster
         await client.connect();
 
-        const database = client.db('helloworld');
+        // Access the database and collection
+        const database = client.db(dbName);
         const messages = database.collection('messages');
 
-        const message = await messages.findOne({});
+        // Query the collection for all messages
+        const allMessages = await messages.find({}).toArray();
 
-        // Send the message and MongoDB host as a response
-        res.send(message ? 
-            `Message: ${message.message} (from MongoDB host: ${mongoHost})` : 
-            `No message found (from MongoDB host: ${mongoHost})`
-        );
+        // Display all messages in the response
+        res.send(allMessages.map(msg => msg.message).join('<br>'));
     } catch (err) {
         console.error(err);
-        res.status(500).send(`Error retrieving message (from MongoDB host: ${mongoHost})`);
+        res.status(500).send('Error retrieving messages');
     } finally {
+        // Close the connection
         await client.close();
     }
 });
