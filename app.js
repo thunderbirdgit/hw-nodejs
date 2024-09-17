@@ -6,9 +6,9 @@ const port = 3000;
 
 // List of MongoDB hosts in the replica set
 const mongoHosts = [
-    'mongodb://mongodb-0.mongodb.qa-mongodb.svc.cluster.local:27017',
-    'mongodb://mongodb-1.mongodb.qa-mongodb.svc.cluster.local:27017',
-    'mongodb://mongodb-2.mongodb.qa-mongodb.svc.cluster.local:27017'
+    'mongodb://mongodb-0.mongodb.dev-mongodb.svc.cluster.local:27017',
+    'mongodb://mongodb-1.mongodb.dev-mongodb.svc.cluster.local:27017',
+    'mongodb://mongodb-2.mongodb.dev-mongodb.svc.cluster.local:27017'
 ];
 
 // Round-robin index for rotating through hosts
