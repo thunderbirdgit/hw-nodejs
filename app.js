@@ -4,8 +4,8 @@ const { MongoClient } = require('mongodb');
 const app = express();
 const port = 3000;
 
-// Replace the following with your MongoDB connection string
-const uri = 'mongodb://mongodb-0.mongodb.qa-mongodb.svc.cluster.local:27017,mongodb-1.mongodb.qa-mongodb.svc.cluster.local:27017,mongodb-2.mongodb.qa-mongodb.svc.cluster.local:27017'; // Update this if using a different host or port
+// MongoDB connection string with replica set hosts
+const uri = 'mongodb://mongodb-0.mongodb.qa-mongodb.svc.cluster.local:27017,mongodb-1.mongodb.qa-mongodb.svc.cluster.local:27017,mongodb-2.mongodb.qa-mongodb.svc.cluster.local:27017';
 const dbName = 'helloworld';
 
 app.get('/', async (req, res) => {
@@ -19,11 +19,21 @@ app.get('/', async (req, res) => {
         const database = client.db(dbName);
         const messages = database.collection('messages');
 
-        // Query the collection
+        // Query the collection for a message
         const message = await messages.findOne({});
 
-        // Send the message as a response
-        res.send(message ? message.message : 'No message found');
+        // Get details of the server currently serving the connection
+        const adminDb = database.admin();
+        const serverInfo = await adminDb.command({ isMaster: 1 });
+        const mongoHost = serverInfo.me; // "me" contains the host serving the request
+
+        // Display message and MongoDB host in the browser
+        res.send(`
+            <h1>Message from MongoDB:</h1>
+            <p>${message ? message.message : 'No message found'}</p>
+            <h2>Connected to MongoDB Host:</h2>
+            <p>${mongoHost}</p>
+        `);
     } catch (err) {
         console.error(err);
         res.status(500).send('Error retrieving message');
