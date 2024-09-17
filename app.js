@@ -22,6 +22,7 @@ const getMongoClient = () => {
 
 app.get('/', async (req, res) => {
     const client = getMongoClient();  // Get client from the round-robin host
+    const mongoHost = client.options.srvHost || client.s.url;  // Get the MongoDB host
 
     try {
         // Connect to MongoDB
@@ -32,10 +33,14 @@ app.get('/', async (req, res) => {
 
         const message = await messages.findOne({});
 
-        res.send(message ? message.message : 'No message found');
+        // Send the message and MongoDB host as a response
+        res.send(message ? 
+            `Message: ${message.message} (from MongoDB host: ${mongoHost})` : 
+            `No message found (from MongoDB host: ${mongoHost})`
+        );
     } catch (err) {
         console.error(err);
-        res.status(500).send('Error retrieving message');
+        res.status(500).send(`Error retrieving message (from MongoDB host: ${mongoHost})`);
     } finally {
         await client.close();
     }
