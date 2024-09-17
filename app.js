@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ReadPreference } = require('mongodb');
 
 const app = express();
 const port = 3000;
@@ -9,7 +9,9 @@ const uri = 'mongodb://mongodb-0.mongodb.qa-mongodb.svc.cluster.local:27017,mong
 const dbName = 'helloworld';
 
 app.get('/', async (req, res) => {
-    const client = new MongoClient(uri);
+    const client = new MongoClient(uri, {
+        readPreference: ReadPreference.NEAREST // You can also try ReadPreference.SECONDARY_PREFERRED
+    });
 
     try {
         // Connect to the MongoDB cluster
